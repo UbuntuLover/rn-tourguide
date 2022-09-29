@@ -133,14 +133,19 @@ export const TourGuideProvider = ({
     })
   }
 
-  const setCurrentStep = (key: string, step?: IStep) =>
+  const setCurrentStep = (key: string, step?: IStep, isSkip: boolean = false) =>
     new Promise<void>((resolve) => {
+      
       updateCurrentStep((currentStep) => {
         const newStep = { ...currentStep }
         newStep[key] = step
         eventEmitter[key]?.emit('stepChange', step)
         return newStep
       })
+      // need to update 
+      if (isSkip) {
+        eventEmitter[key]?.emit('skip', step);
+      }
       resolve()
     })
 
@@ -181,6 +186,12 @@ export const TourGuideProvider = ({
   const _stop = (key: string) => {
     setVisible(key, false)
     setCurrentStep(key, undefined)
+  }
+
+  const _skip = (key: string) => {
+    setVisible(key, false);
+    // only need to set true here.
+    setCurrentStep(key, undefined, true);
   }
 
   const registerStep = (key: string, step: IStep) => {
@@ -234,6 +245,7 @@ export const TourGuideProvider = ({
   const next = () => _next(tourKey)
   const prev = () => _prev(tourKey)
   const stop = () => _stop(tourKey)
+  const skip = () => _skip(tourKey)
   return (
     <View style={[styles.container, wrapperStyle]}>
       <TourGuideContext.Provider
@@ -244,6 +256,7 @@ export const TourGuideProvider = ({
           getCurrentStep,
           start,
           stop,
+          skip,
           canStart,
           setTourKey,
         }}
@@ -255,6 +268,7 @@ export const TourGuideProvider = ({
             next,
             prev,
             stop,
+            skip,
             visible: visible[tourKey],
             isFirstStep: isFirstStep[tourKey],
             isLastStep: isLastStep[tourKey],

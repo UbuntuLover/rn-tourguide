@@ -261,6 +261,11 @@ export class Modal extends React.Component<ModalProps, State> {
     this.props.stop()
   }
 
+  handleSkip = () => {
+    this.reset()
+    this.props.stop()
+  }
+
   renderMask = () => (
     <SvgMask
       style={styles.overlayContainer}
@@ -306,6 +311,7 @@ export class Modal extends React.Component<ModalProps, State> {
           handleNext={this.handleNext}
           handlePrev={this.handlePrev}
           handleStop={this.handleStop}
+          handleSkip={this.handleSkip}
           labels={this.props.labels}
         />
       </Animated.View>

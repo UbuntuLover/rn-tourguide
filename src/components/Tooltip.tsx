@@ -13,6 +13,7 @@ export interface TooltipProps {
   handleNext?: () => void
   handlePrev?: () => void
   handleStop?: () => void
+  handleSkip?: () => void
 }
 
 export const Tooltip = ({
@@ -21,6 +22,7 @@ export const Tooltip = ({
   handleNext,
   handlePrev,
   handleStop,
+  handleSkip,
   currentStep,
   labels,
 }: TooltipProps) => (
@@ -42,7 +44,11 @@ export const Tooltip = ({
     </View>
     <View style={[styles.bottomBar]}>
       {!isLastStep ? (
-        <TouchableOpacity onPress={handleStop}>
+        <TouchableOpacity onPress={() => {
+            if (handleSkip) {
+              handleSkip();
+            }
+          }}>
           <Button>{labels?.skip || 'Skip'}</Button>
         </TouchableOpacity>
       ) : null}
